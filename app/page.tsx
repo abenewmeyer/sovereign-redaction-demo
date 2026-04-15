@@ -9,7 +9,7 @@ export default function SovereignRedactionDemo() {
   const domain = searchParams.get('domain')
 
   const [logoUrl, setLogoUrl] = useState<string>('')
-  const primaryColor = '#334155' // Bank-grade slate blue
+  const primaryColor = '#334155'
 
   // Form state
   const [clientName, setClientName] = useState<string>('John Doe')
@@ -23,11 +23,11 @@ export default function SovereignRedactionDemo() {
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
   const [sanitizedPayload, setSanitizedPayload] = useState<any>(null)
 
-  // System Audit Terminal state
+  // System Audit Terminal
   const [auditLogs, setAuditLogs] = useState<string[]>([])
   const terminalRef = useRef<HTMLDivElement>(null)
 
-  // Auto-scroll terminal to bottom
+  // Auto-scroll to bottom when new logs appear
   useEffect(() => {
     if (terminalRef.current) {
       terminalRef.current.scrollTop = terminalRef.current.scrollHeight
@@ -41,42 +41,38 @@ export default function SovereignRedactionDemo() {
     setLogoUrl(clearbitLogo)
   }, [domain])
 
-  // Clear terminal when starting new process
   const clearTerminal = () => {
     setAuditLogs([])
   }
 
-  // Stream audit logs with realistic delays
+  // Stream audit logs (they now persist after processing)
   const streamAuditLogs = async () => {
-    clearTerminal()
-
     const logs = [
       `[${new Date().toLocaleTimeString()}] INITIATING AIR-GAPPED ENVIRONMENT...`,
-      `[${new Date(Date.now() + 1000).toLocaleTimeString()}] COMPLIANCE CHECK: PII DETECTED (REGEX: SSN, NAME)`,
-      `[${new Date(Date.now() + 2000).toLocaleTimeString()}] EXECUTING LOCAL REDACTION ALGORITHM...`,
-      `[${new Date(Date.now() + 3000).toLocaleTimeString()}] MASKING SENSITIVE TOKENS (SSN → [***-**-****])`,
-      `[${new Date(Date.now() + 4000).toLocaleTimeString()}] ZERO-RETENTION PAYLOAD PREPARED`,
-      `[${new Date(Date.now() + 5000).toLocaleTimeString()}] SANITIZED NOTES ROUTED TO MOCK LLM`,
-      `[${new Date(Date.now() + 6000).toLocaleTimeString()}] AUDIT COMPLETE — NO DATA EXFILTRATED`,
-      `[${new Date(Date.now() + 7000).toLocaleTimeString()}] SOVEREIGN AI SANDBOX SECURE ✓`,
+      `[${new Date(Date.now() + 800).toLocaleTimeString()}] COMPLIANCE CHECK: PII DETECTED (REGEX: SSN, NAME)`,
+      `[${new Date(Date.now() + 1600).toLocaleTimeString()}] EXECUTING LOCAL REDACTION ALGORITHM...`,
+      `[${new Date(Date.now() + 2400).toLocaleTimeString()}] MASKING SENSITIVE TOKENS (SSN → [***-**-****])`,
+      `[${new Date(Date.now() + 3200).toLocaleTimeString()}] ZERO-RETENTION PAYLOAD PREPARED`,
+      `[${new Date(Date.now() + 4000).toLocaleTimeString()}] SANITIZED NOTES ROUTED TO MOCK LLM`,
+      `[${new Date(Date.now() + 4800).toLocaleTimeString()}] AUDIT COMPLETE — NO DATA EXFILTRATED`,
+      `[${new Date(Date.now() + 5600).toLocaleTimeString()}] SOVEREIGN AI SANDBOX SECURE ✓`,
     ]
 
-    for (let i = 0; i < logs.length; i++) {
-      await new Promise((resolve) => setTimeout(resolve, 420)) // slight realistic delay
-      setAuditLogs((prev) => [...prev, logs[i]])
+    for (const log of logs) {
+      await new Promise((resolve) => setTimeout(resolve, 600))
+      setAuditLogs((prev) => [...prev, log])
     }
   }
 
-  // Secure processing handler
+  // Main processing handler
   const handleProcessSecurely = async () => {
     setIsProcessing(true)
     setSanitizedPayload(null)
 
-    // Start streaming terminal logs
     await streamAuditLogs()
 
-    // Simulate redaction delay (total ~1.8s + logs)
-    await new Promise((resolve) => setTimeout(resolve, 800))
+    // Final redaction step
+    await new Promise((resolve) => setTimeout(resolve, 600))
 
     const sanitizedNotes = meetingNotes.replace(/(\d{3})-?(\d{2})-?(\d{4})/g, '[***-**-****]')
 
@@ -137,7 +133,7 @@ export default function SovereignRedactionDemo() {
     )
   }
 
-  // Branded Dashboard
+  // Main Branded Dashboard
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-100" style={{ '--accent': primaryColor } as any}>
       {/* Header */}
@@ -174,9 +170,9 @@ export default function SovereignRedactionDemo() {
       </div>
 
       <div className="max-w-screen-2xl mx-auto p-8 space-y-8">
-        {/* Main Dashboard Panels */}
-        <div className="flex gap-8 h-[calc(100vh-220px)]">
-          {/* LEFT — Input */}
+        {/* Main Three Panels */}
+        <div className="flex gap-8 h-[calc(100vh-260px)]">
+          {/* LEFT: Input */}
           <div className="flex-1 bg-zinc-900 border border-zinc-800 rounded-3xl p-8 flex flex-col shadow-2xl">
             <h2 className="text-lg font-semibold mb-6 flex items-center gap-x-2" style={{ color: primaryColor }}>
               📋 CLIENT PII INPUT
@@ -185,42 +181,26 @@ export default function SovereignRedactionDemo() {
             <div className="space-y-8 flex-1">
               <div>
                 <label className="block text-xs font-medium text-zinc-400 mb-2">CLIENT NAME</label>
-                <input
-                  type="text"
-                  value={clientName}
-                  onChange={(e) => setClientName(e.target.value)}
-                  className="w-full px-5 py-4 bg-zinc-800 border border-zinc-700 rounded-2xl focus:border-[var(--accent)] outline-none text-lg transition-all"
-                />
+                <input type="text" value={clientName} onChange={(e) => setClientName(e.target.value)}
+                  className="w-full px-5 py-4 bg-zinc-800 border border-zinc-700 rounded-2xl focus:border-[var(--accent)] outline-none text-lg transition-all" />
               </div>
               <div>
                 <label className="block text-xs font-medium text-zinc-400 mb-2">SSN</label>
-                <input
-                  type="text"
-                  value={ssn}
-                  onChange={(e) => setSsn(e.target.value)}
-                  className="w-full px-5 py-4 bg-zinc-800 border border-zinc-700 rounded-2xl focus:border-[var(--accent)] outline-none text-lg transition-all"
-                />
+                <input type="text" value={ssn} onChange={(e) => setSsn(e.target.value)}
+                  className="w-full px-5 py-4 bg-zinc-800 border border-zinc-700 rounded-2xl focus:border-[var(--accent)] outline-none text-lg transition-all" />
               </div>
               <div>
                 <label className="block text-xs font-medium text-zinc-400 mb-2">ACCOUNT BALANCE</label>
                 <div className="relative">
                   <span className="absolute left-5 top-1/2 -translate-y-1/2 text-2xl text-zinc-400">$</span>
-                  <input
-                    type="text"
-                    value={accountBalance}
-                    onChange={(e) => setAccountBalance(e.target.value)}
-                    className="w-full pl-10 pr-5 py-4 bg-zinc-800 border border-zinc-700 rounded-2xl focus:border-[var(--accent)] outline-none text-lg transition-all"
-                  />
+                  <input type="text" value={accountBalance} onChange={(e) => setAccountBalance(e.target.value)}
+                    className="w-full pl-10 pr-5 py-4 bg-zinc-800 border border-zinc-700 rounded-2xl focus:border-[var(--accent)] outline-none text-lg transition-all" />
                 </div>
               </div>
               <div>
                 <label className="block text-xs font-medium text-zinc-400 mb-2">MEETING NOTES</label>
-                <textarea
-                  value={meetingNotes}
-                  onChange={(e) => setMeetingNotes(e.target.value)}
-                  rows={5}
-                  className="w-full px-5 py-4 bg-zinc-800 border border-zinc-700 rounded-3xl focus:border-[var(--accent)] outline-none resize-none text-lg transition-all"
-                />
+                <textarea value={meetingNotes} onChange={(e) => setMeetingNotes(e.target.value)} rows={5}
+                  className="w-full px-5 py-4 bg-zinc-800 border border-zinc-700 rounded-3xl focus:border-[var(--accent)] outline-none resize-none text-lg transition-all" />
               </div>
             </div>
 
@@ -228,11 +208,7 @@ export default function SovereignRedactionDemo() {
               onClick={handleProcessSecurely}
               disabled={isProcessing}
               className="mt-8 w-full py-6 text-lg font-semibold rounded-3xl transition-all active:scale-[0.97] flex items-center justify-center gap-x-3"
-              style={{
-                backgroundColor: primaryColor,
-                color: '#fff',
-                boxShadow: `0 0 25px -3px ${primaryColor}`,
-              }}
+              style={{ backgroundColor: primaryColor, color: '#fff', boxShadow: `0 0 25px -3px ${primaryColor}` }}
             >
               {isProcessing ? (
                 <>
@@ -240,22 +216,16 @@ export default function SovereignRedactionDemo() {
                   EXECUTING LOCAL REDACTION...
                 </>
               ) : (
-                <>
-                  PROCESS SECURELY <span className="text-xl">🔒</span>
-                </>
+                <>PROCESS SECURELY <span className="text-xl">🔒</span></>
               )}
             </button>
           </div>
 
-          {/* MIDDLE — Loading */}
+          {/* MIDDLE: Status */}
           <div className="w-80 bg-zinc-900 border border-zinc-800 rounded-3xl p-8 flex flex-col items-center justify-center text-center shadow-2xl">
             <div className="mb-8">
-              <div
-                className="w-20 h-20 mx-auto rounded-3xl flex items-center justify-center text-4xl mb-6"
-                style={{ backgroundColor: `${primaryColor}20`, color: primaryColor }}
-              >
-                🧬
-              </div>
+              <div className="w-20 h-20 mx-auto rounded-3xl flex items-center justify-center text-4xl mb-6"
+                style={{ backgroundColor: `${primaryColor}20`, color: primaryColor }}>🧬</div>
               <h3 className="font-medium text-xl mb-1">Air-Gapped Pipeline</h3>
               <p className="text-zinc-400 text-sm">Local Sovereign AI Redaction Engine</p>
             </div>
@@ -265,14 +235,14 @@ export default function SovereignRedactionDemo() {
                 <div className="flex justify-center">
                   <div className="w-12 h-12 border-4 border-zinc-700 border-t-[var(--accent)] rounded-full animate-spin"></div>
                 </div>
-                <p className="font-mono text-xs tracking-[2px] text-emerald-300">EXECUTING...</p>
+                <p className="font-mono text-xs tracking-[2px] text-emerald-300">PROCESSING...</p>
               </div>
             ) : (
-              <p className="text-zinc-400 text-sm">Click PROCESS SECURELY to begin</p>
+              <p className="text-zinc-400 text-sm">Click PROCESS SECURELY above</p>
             )}
           </div>
 
-          {/* RIGHT — Redacted Output */}
+          {/* RIGHT: Output */}
           <div className="flex-1 bg-zinc-900 border border-zinc-800 rounded-3xl p-8 flex flex-col shadow-2xl">
             <h2 className="text-lg font-semibold mb-6 flex items-center gap-x-2" style={{ color: primaryColor }}>
               ✅ REDACTED OUTPUT
@@ -281,18 +251,9 @@ export default function SovereignRedactionDemo() {
             {sanitizedPayload ? (
               <div className="space-y-8 flex-1 flex flex-col">
                 <div className="bg-black/40 border border-zinc-700 rounded-3xl p-6 font-mono text-sm space-y-4 flex-1">
-                  <div className="flex justify-between">
-                    <span className="text-zinc-400">clientName</span>
-                    <span className="text-emerald-300">{sanitizedPayload.clientName}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-zinc-400">ssn</span>
-                    <span className="text-emerald-300">{sanitizedPayload.ssn}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-zinc-400">accountBalance</span>
-                    <span className="text-emerald-300">{sanitizedPayload.accountBalance}</span>
-                  </div>
+                  <div className="flex justify-between"><span className="text-zinc-400">clientName</span><span className="text-emerald-300">{sanitizedPayload.clientName}</span></div>
+                  <div className="flex justify-between"><span className="text-zinc-400">ssn</span><span className="text-emerald-300">{sanitizedPayload.ssn}</span></div>
+                  <div className="flex justify-between"><span className="text-zinc-400">accountBalance</span><span className="text-emerald-300">{sanitizedPayload.accountBalance}</span></div>
                   <div>
                     <span className="text-zinc-400 block mb-1">meetingNotes</span>
                     <p className="text-zinc-300 leading-snug text-xs">{sanitizedPayload.meetingNotes}</p>
@@ -304,10 +265,10 @@ export default function SovereignRedactionDemo() {
                     <span className="text-cyan-400 text-xl">☁️</span>
                     <h3 className="uppercase text-xs tracking-widest font-medium">Cloud LLM Summary (SANITIZED ONLY)</h3>
                   </div>
-                  <div className="bg-gradient-to-br from-cyan-950 to-transparent border border-cyan-800 rounded-3xl p-6 text-sm leading-relaxed">
+                  <div className="bg-gradient-to-br from-cyan-950 border border-cyan-800 rounded-3xl p-6 text-sm">
                     Client {sanitizedPayload.clientName} maintains an account balance of {sanitizedPayload.accountBalance}. 
                     Sanitized notes indicate standard refinancing discussion with emphasis on security protocols. 
-                    No PII exposed. Recommendation: Proceed with standard KYC verification.
+                    No PII exposed.
                   </div>
                 </div>
 
@@ -315,25 +276,21 @@ export default function SovereignRedactionDemo() {
                   onClick={() => {
                     setSanitizedPayload(null)
                     setIsProcessing(false)
-                    clearTerminal()
                   }}
                   className="text-xs mx-auto block text-zinc-400 hover:text-white underline"
                 >
-                  Clear output &amp; reset
+                  Clear output
                 </button>
               </div>
             ) : (
-              <div className="flex-1 flex items-center justify-center text-zinc-500 text-center">
-                <div>
-                  <div className="text-6xl mb-4 opacity-20">📤</div>
-                  <p className="font-medium">Redacted payload will appear here</p>
-                </div>
+              <div className="flex-1 flex items-center justify-center text-zinc-500">
+                Redacted output will appear here after processing
               </div>
             )}
           </div>
         </div>
 
-        {/* NEW: System Audit Terminal — placed directly below the panels */}
+        {/* System Audit Terminal - stays visible */}
         <div className="bg-black border border-zinc-800 rounded-3xl overflow-hidden shadow-2xl">
           <div className="bg-zinc-950 border-b border-zinc-800 px-6 py-3 flex items-center justify-between">
             <div className="flex items-center gap-x-3">
@@ -342,13 +299,18 @@ export default function SovereignRedactionDemo() {
               <div className="w-3 h-3 bg-emerald-500 rounded-full"></div>
             </div>
             <div className="font-mono text-xs text-zinc-400 tracking-widest">SYSTEM AUDIT TERMINAL • AIR-GAPPED MODE</div>
-            <div className="text-[10px] text-emerald-400 font-mono">LIVE</div>
+            
+            <button
+              onClick={clearTerminal}
+              className="text-[10px] px-3 py-1 bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 rounded text-zinc-400 hover:text-white transition-colors"
+            >
+              CLEAR LOGS
+            </button>
           </div>
 
           <div
             ref={terminalRef}
-            className="h-64 p-6 font-mono text-sm text-emerald-300 bg-black overflow-y-auto whitespace-pre-wrap leading-relaxed"
-            style={{ scrollbarWidth: 'thin', scrollbarColor: '#334155 #000' }}
+            className="h-72 p-6 font-mono text-sm text-emerald-300 bg-black overflow-y-auto whitespace-pre-wrap leading-relaxed"
           >
             {auditLogs.length > 0 ? (
               auditLogs.map((log, index) => (
@@ -358,7 +320,7 @@ export default function SovereignRedactionDemo() {
               ))
             ) : (
               <div className="text-zinc-500 italic">
-                Terminal ready. Click PROCESS SECURELY to begin air-gapped audit log stream...
+                Terminal ready. Click "PROCESS SECURELY" to start the air-gapped audit trail...
               </div>
             )}
           </div>
